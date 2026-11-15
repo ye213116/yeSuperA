@@ -36,8 +36,12 @@
 1. 在 GitHub 上提交 Review。Review 必须来自允许身份、包含实际修改意见、指向当前完整 head，
    并与当前补丁订阅一致；本账号可提交非空 `COMMENTED` Review。
 2. 普通会话评论、空 Review、`APPROVED` 以及指向旧 head 的 Review 都不会自动触发修改。
-3. 触发后保持同一 Task，开启新 Run 和新 worktree，更新同一专用分支与同一草稿 PR；
+3. Review 被采集后先入队 Assignment，**不会自动执行**；仍需人工明确批准 tick，才会启动新的 Run。
+4. 重复采集同一 Review 不应重复入队；失败后的重试需要操作者显式重新排队，不能由重复采集触发。
+5. 触发后保持同一 Task，开启新 Run 和新 worktree，更新同一专用分支与同一草稿 PR；
    预算跨 Run 累计。
+6. 更新已有 PR 前，需要先 `prepare` 一份新计划，并再次明确批准 `publish`；旧计划不可复用，
+   未获批准不会发生远端写入。
 
 预期观察点：Task 状态从 `awaiting_review` 回到执行中，Review 意见被处理，PR 持续更新且不丢失
 原有变更。
